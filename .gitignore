@@ -59,3 +59,13 @@ typings/
 
 # next.js build output
 .next
+*.wt
+*.2018-06-02T01-23-23Z-00000
+*.2018-06-02T01-23-58Z-00000
+*.interim
+*.0000000002
+*.0000000001
+*.lock
+*.bson
+data/WiredTiger
+*.turtle
