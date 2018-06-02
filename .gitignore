@@ -69,3 +69,6 @@ typings/
 *.bson
 data/WiredTiger
 *.turtle
+data/diagnostic.data/metrics.2018-06-02T13-49-41Z-00000
+data/diagnostic.data/metrics.2018-06-02T18-37-34Z-00000
+data/journal/WiredTigerLog.0000000004
