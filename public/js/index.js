@@ -62,8 +62,10 @@ $("#addSend").click(() => {
                 barcode: form[1].value,
                 price: form[2].value,
                 valid: form[3].value
-            }, (data, status) => {
-                console.log(status);
+            }, 
+            
+            (data, status) => {
+                console.log(data);
             }
         )
     }
