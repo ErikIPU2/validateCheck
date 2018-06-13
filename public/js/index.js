@@ -5,6 +5,7 @@ $(document).ready(() => {
         format : 'dd/mm/yyyy'
     });
 
+    // window.open("adress.html");
 })
 
 $("#date").change(() => {
@@ -84,7 +85,7 @@ $("#addSend").click(() => {
         )
     }
     
-    
+
 });
 
 $("#findAll").click(() => {
@@ -288,3 +289,4 @@ function isValid(date1) {
     }
     else return true;  
 }
+
