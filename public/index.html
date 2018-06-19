@@ -4,10 +4,13 @@
         <link rel="stylesheet" href="css/iziToast.min.css">
         <link type="text/css" rel="stylesheet" href="css/materialize.min.css"  media="screen,projection"/>
         <title>Validate</title>
-      <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <meta name="theme-color" content="#B71C1C">
+        <meta name="apple-mobile-web-app-status-bar-style" content="#B71C1C">
+        <meta name="msapplication-navbutton-color" content="#B71C1C">
     </head>
 
-    <body>
+    <body oncontextmenu="return false;">
 
         <header>
             <div class="navbar-fixed">
@@ -19,10 +22,33 @@
                         </div>
                         
                         <ul class="right hide-on-med-and-down">
-                            <li><a class="modal-trigger" href="#addModal"><i class="material-icons">add_circle_outline</i></a></li>
-                            <li><a class="modal-trigger" href="#findModal"><i class="material-icons">search</i></a></li>
-                            <li><a href="#" id="findAll"><i class="material-icons">view_module</i></a></li>
-                            <li><a href="#" id="findInvalid"><i class="material-icons">sync_problem</i></a></li>
+                            <li><a class="modal-trigger" href="#addModal">
+                                <ul>
+                                    <li><i class="material-icons">add_circle_outline</i></li>
+                                    <li>Adicionar</li>
+                                </ul>
+                            </a></li>
+
+                            <li><a class="modal-trigger" href="#findModal">
+                                <ul>
+                                    <li><i class="material-icons">search</i></li>
+                                    <li>Procurar</li>
+                                </ul>
+                            </a></li>
+
+                            <li><a href="#" id="findAll">
+                                <ul>
+                                    <li><i class="material-icons">view_module</i></li>
+                                    <li>Listar Todos</li>
+                                </ul>
+                            </a></li>
+
+                            <li><a href="#" id="findInvalid">
+                                <ul>
+                                    <li><i class="material-icons">sync_problem</i></li>
+                                    <li>Listar vencidos</li>
+                                </ul>
+                            </a></li>
                         </ul>
                     </div>
                 </nav>
@@ -42,7 +68,7 @@
             <div class="footer-copyright">
                 <div class="container">
                     © 2018 Erik Borella <br>
-                    build 1
+                    <a class="modal-trigger white-text" href="#changelog">build 1.1</a>
                     <a class="white-text right" href="adress.html">Onde acessar?</a>
                 </div>
             </div>
@@ -70,6 +96,7 @@
                                 <i class="material-icons prefix">calendar_view_day</i>
                                 <input type="number" name="barcode" id="barcode" class="validate">
                                 <label for="barcode">Codigo de Barras</label>
+                                <span class="helper-text" data-error="Codigo de barras já existente, produto atual será substituido"></span>
                             </div>
 
                         </div>
@@ -153,6 +180,24 @@
                 </div>
             </div>
 
+            <div id="changelog" class="modal">
+                <div class="modal-content">
+                    <h4>Changelog</h4>
+                    <br>
+                    <h5>Build 1.1</h5>
+                    <ol style="list-style-type: disc"> 
+                        <li>Remoção da obrigatoriedade de colocar preço do produto</li>
+                        <li>Adicionada legendas ao lado dos botões de funções em telas grandes</li>
+                        <li>Adicionada mudança de cores em navegadores mobile</li>
+                        <li>Produtos cadastrados com o mesmo codigos de barra serão substituidos</li>
+                        <li>Produtos agora poderão ser exluidos apertando em cima deles com o botão direito</li>
+                    </ol>
+                </div>
+                <div class="modal-footer">
+                    <a href="#" class="modal-close waves-effect waves-red btn-flat">Fechar</a>
+                </div>
+            </div>
+
         </modals>
 
         <dropdown>
@@ -162,6 +207,11 @@
                 <li><a href="#" id="findAllM"><i class="material-icons">view_module</i>Listar</a></li>
                 <li><a href="#" id="findInvalidM"><i class="material-icons">sync_problem</i>Vencidos</a></li>
             </ul>
+
+            <div id="table_drop">
+
+            </div>
+            
         </dropdown>
 
 
@@ -172,3 +222,4 @@
         <script src="js/index.js" type="text/javascript"></script>
     </body>
   </html>
+

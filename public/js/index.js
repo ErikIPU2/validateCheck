@@ -1,10 +1,12 @@
 $(document).ready(() => {
     $(".modal").modal();
-    $('.dropdown-trigger').dropdown();
     $('.datepicker').datepicker({
         format : 'dd/mm/yyyy'
     });
 
+    $('.dropdown-trigger').dropdown();
+
+    
     // window.open("adress.html");
 })
 
@@ -32,6 +34,21 @@ $("#radioName").change(() => {
     $("#barcodeS").attr('disabled', 'disabled');
 })
 
+$("#barcode").change(() => {
+    var code = $("#barcode").val();
+    $.get("/getProd", (data, status) => {
+        var exist = existBarcode(code, data);
+        if (exist) {
+            $("#barcode").removeClass("valid");
+            $("#barcode").addClass("invalid");
+        }
+        else {
+            $("#barcode").removeClass("invalid");
+            $("#barcode").addClass("valid");
+        }
+    });      
+})
+
 $("#addSend").click(() => {
     var form = $("#addForm").serializeArray();    
     
@@ -45,11 +62,7 @@ $("#addSend").click(() => {
             title: "Digite o codigo de barras"
         });
     }
-    else if (!form[2].value) {
-        iziToast.error({
-            title: "Digite o preço"
-        });
-    }
+
     else if (!form[3].value) {
         iziToast.error({
             title: "Digite a data de validade"
@@ -61,28 +74,43 @@ $("#addSend").click(() => {
         });
     }
     else {
-        $.post("/cadProd", 
-            {
-                name: form[0].value,
-                barcode: form[1].value,
-                price: form[2].value,
-                valid: form[3].value
-            }, 
-            
-            (data, status) => {
-                if (data) {
-                    iziToast.success({
-                        title: "Produto adionado",
-                        position: "topRight"
-                    });
-                    $("#name").val("");
-                    $("#barcode").val("");
-                    $("#preco").val("");
-                    $("#date").val("");
-                    M.updateTextFields();
-                }
+        $.get("/getProd", (data, status) => {
+
+            if (existBarcode(form[1].value, data)) {
+               $.post("/removeBarcode", 
+                    {barcode: form[1].value},
+                    (data, status => {
+                        console.log(data);
+                    })
+                )
             }
-        )
+
+            $.post("/cadProd", 
+                {
+                    name: form[0].value,
+                    barcode: form[1].value,
+                    price: form[2].value,
+                    valid: form[3].value
+                }, 
+                
+                (data, status) => {
+                    if (data) {
+                        iziToast.success({
+                            title: "Produto adionado",
+                            position: "topRight"
+                        });
+                        $("#name").val("");
+                        $("#barcode").val("");
+                        $("#preco").val("");
+                        $("#date").val("");
+                        M.updateTextFields();
+                    }
+                }
+            )
+        
+        });
+
+        
     }
     
 
@@ -90,7 +118,7 @@ $("#addSend").click(() => {
 
 $("#findAll").click(() => {
     $.get("/getProd", (data, status) => {
-        $("#tableView").html(GENERATORTABLE(data));
+        GENERATORTABLE(data);
     })
 })
 
@@ -102,14 +130,15 @@ $("#findInvalid").click(() => {
                 prop.push(data[i]);
             }
         }
-        $("#tableView").html(GENERATORTABLE(prop));
+
+        GENERATORTABLE(prop)
         
     });
 })
 
 $("#findAllM").click(() => {
     $.get("/getProd", (data, status) => {
-        $("#tableView").html(GENERATORTABLE(data));
+        GENERATORTABLE(data);
     })
 })
 
@@ -121,7 +150,7 @@ $("#findInvalidM").click(() => {
                 prop.push(data[i]);
             }
         }
-        $("#tableView").html(GENERATORTABLE(prop));
+        GENERATORTABLE(prop);        
         
     });
 })
@@ -150,7 +179,7 @@ $("#prodS").click(() => {
                     })
                 }
                 else {
-                    $("#tableView").html(GENERATORTABLE(prop));
+                    GENERATORTABLE(prop);
 
                     iziToast.info({
                         title: prop.length + " produtos encontrados",
@@ -189,7 +218,7 @@ $("#prodS").click(() => {
                     })
                 }
                 else {
-                    $("#tableView").html(GENERATORTABLE(prop));
+                    GENERATORTABLE(prop);
                     iziToast.info({
                         title: prop.length + " produtos encontrados",
                         position: "bottomLeft"
@@ -207,6 +236,7 @@ $("#prodS").click(() => {
     
 });
 
+
 function GENERATORTABLE(data) {
 
     var cont = 0;
@@ -220,24 +250,40 @@ function GENERATORTABLE(data) {
                         </tr>
                     </thead>
                     <tbody>`;
-    console.log(data);
 
     for (var i = 0; i < data.length; i++) {
+
         if (!isValid(data[i].valid)) {
             cont++;
-            prop += `<tr class="red">
+            prop += `<tr class="red hoverable" data="`+i+`">
                 <td>`+data[i].name+`</td>
-                <td>`+data[i].barcode+`</td>
-                <td>`+data[i].price+` R$</td>
-                <td>`+data[i].valid+`</td>
-            </tr>`
+                <td>`+data[i].barcode+`</td>`
+
+            if (!data[i].price) {
+                prop += `<td>-</td>`;
+            }
+            else {
+                prop += `<td>`+data[i].price+` R$</td>`;
+            }
+            
+            
+            prop += `<td>`+data[i].valid+`</td>
+                    </tr>`
         }
         else {
-            prop += `<tr>
-                        <td>`+data[i].name+`</td>
-                        <td>`+data[i].barcode+`</td>
-                        <td>`+data[i].price+` R$</td>
-                        <td>`+data[i].valid+`</td>
+            
+            prop += `<tr class = "hoverable" data="`+i+`">
+                <td>`+data[i].name+`</td>
+                <td>`+data[i].barcode+`</td>`
+
+            if (!data[i].price) {
+                prop += `<td>-</td>`;
+            }
+            else {
+                prop += `<td>`+data[i].price+` R$</td>`;
+            }
+            
+            prop += `<td>`+data[i].valid+`</td>
                     </tr>`
         }
     }
@@ -257,7 +303,48 @@ function GENERATORTABLE(data) {
         })
     }
 
-    return prop;
+    
+
+    $("#tableView").html(prop);
+    $("tr").contextmenu(function() {
+        var sel = $(this).attr("data");
+
+        iziToast.show({
+            title: "Deseja exluir "+data[sel].name+"?",
+            position: "center",
+            theme: "dark",
+            buttons: [
+                ['<button>Sim</button>', (istance, toast) => {
+                    istance.hide({transitionOut: 'fadeOutUp'}, toast);
+                    $.post("/removeBarcode", 
+                    {barcode: data[sel].barcode},
+                    (data, status) => {
+
+                        if (data) {
+                            iziToast.info({
+                                title: "Produto excluido foi excluido",
+                                position: "bottomLeft"
+                            })
+
+                            $.get("/getProd", (data, status) => {
+                                GENERATORTABLE(data);
+                            })
+                            
+                        }
+                    })
+                }, true],
+                ['<button>Não</button>', (istance, toast) => {
+                    iziToast.info({
+                        title: "Produto não foi excluido"
+                    });
+                    istance.hide({transitionOut: 'fadeOutUp'}, toast);
+                }, true]
+            ]
+        })
+        
+    });
+
+    
     
 }
 
@@ -290,3 +377,12 @@ function isValid(date1) {
     else return true;  
 }
 
+function existBarcode(barcode, data) {
+    var bol = false;
+    for (var i = 0; i < data.length; i++) {
+        if (data[i].barcode == barcode) {
+            bol = true;
+        }
+    }
+    return bol; 
+}

@@ -1,11 +1,6 @@
 var express = require('express');
 var router = express.Router();
 
-/* GET home page. */
-router.get('/', function(req, res, next) {
-	res.render('index', { title: 'Express' });
-});
-
 router.get('/getProd', (req, res) => {
 	global.db.findAll((e, docs) => {
 		if (e) return console.log(e);
@@ -18,7 +13,14 @@ router.post('/cadProd', (req, res) => {
 		if (e) return console.log(e);
 		res.send(true);
 	})
-	
+})
+
+router.post('/removeBarcode', (req, res) => {
+	var barcode = req.body.barcode;
+	global.db.remove(barcode, (e, result) => {
+		if (e) return console.log(e);
+		res.send(true);
+	})
 })
 
 module.exports = router;

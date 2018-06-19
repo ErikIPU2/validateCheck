@@ -11,4 +11,9 @@ function insert(customer, callback){
     global.conn.collection("prod").insert(customer, callback);
 }
 
-module.exports = { findAll, insert }
+function remove(barcode, callback) {
+    var prop = {"barcode" : barcode};    
+    global.conn.collection("prod").deleteOne(prop, callback);
+}
+
+module.exports = { findAll, insert, remove }
