@@ -1,7 +1,56 @@
 $(document).ready(() => {
     $(".modal").modal();
     $('.datepicker').datepicker({
-        format : 'dd/mm/yyyy'
+        format : 'dd/mm/yyyy',
+        i18n : {
+            months: [
+                'Janeiro',
+                'Fevereiro',
+                'Março',
+                'Abril',
+                'Maio',
+                'Junho',
+                'Julho',
+                'Agosto',
+                'Setembro',
+                'Outubro',
+                'Novembro',
+                'Dezembro'
+            ],
+            monthsShort : [
+                'Jan',
+                'Fev',
+                'Mar',
+                'Apr',
+                'Mai',
+                'Jun',
+                'Jul',
+                'Aog',
+                'Sep',
+                'Out',
+                'Nov',
+                'Dez'
+              ],
+              weekdays: [
+                'Domingo',
+                'Segunda',
+                'Terça',
+                'Quarta',
+                'Quinta',
+                'Sexta',
+                'Sabado'
+              ],
+              weekdaysShort: [
+                'Dom',
+                'Seg',
+                'Ter',
+                'Qua',
+                'Qui',
+                'Sex',
+                'Sab'
+              ],
+              weekdaysAbbrev: ['D','S','T','Q','Q','S','S']
+        }
     });
 
     $('.dropdown-trigger').dropdown();
@@ -41,6 +90,22 @@ $("#barcode").change(() => {
         if (exist) {
             $("#barcode").removeClass("valid");
             $("#barcode").addClass("invalid");
+
+            var index;
+            for (var i = 0; i < data.length; i++) {
+                if (data[i].barcode == code) {
+                    bol = true;
+                    index = i;
+                }
+            }
+
+            $("#name").val(data[index].name);
+            $("#preco").val(data[index].price);
+            $("#date").val(data[index].valid);
+
+            M.updateTextFields();
+
+
         }
         else {
             $("#barcode").removeClass("invalid");
