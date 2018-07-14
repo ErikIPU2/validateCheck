@@ -301,8 +301,19 @@ $("#prodS").click(() => {
     
 });
 
+$("#clearBtn").click(() => {
+    $("#name").val("");
+    $("#barcode").val("");
+    $("#preco").val("");
+    $("#date").val("");
+    M.updateTextFields();
+})
+
 
 function GENERATORTABLE(data) {
+
+    data.sort(dynamicSort("name"));
+    
 
     var cont = 0;
     var prop = `<table class="striped ">
@@ -450,4 +461,16 @@ function existBarcode(barcode, data) {
         }
     }
     return bol; 
+}
+
+function dynamicSort(property) {
+    var sortOrder = 1;
+    if(property[0] === "-") {
+        sortOrder = -1;
+        property = property.substr(1);
+    }
+    return function (a,b) {
+        var result = (a[property] < b[property]) ? -1 : (a[property] > b[property]) ? 1 : 0;
+        return result * sortOrder;
+    }
 }
